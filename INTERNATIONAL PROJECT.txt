@@ -1,0 +1,158 @@
+CREATE SCHEMA internationalbreweries;
+CREATE TABLE internationalbreweries.pabod(
+SALES_ID INT UNIQUE PRIMARY KEY,
+SALES_REP VARCHAR,
+EMAILS VARCHAR,
+BRANDS VARCHAR,
+PLANT_COST INT,
+UNIT_PRICE INT,
+QUANTITY INT,
+COST INT,
+PROFIT INT,
+COUNTRIES VARCHAR,
+REGION VARCHAR,
+MONTHS VARCHAR,
+YEARS VARCHAR
+);
+------------
+SELECT *
+FROM internationalbreweries.pabod
+
+---------------PROFIT WITH ANALYSIS--------------
+
+1)Within the space of the last three years, what was the profit worth of the breweries, inclusive of the anglophone and the francophone territories?
+
+SELECT SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019'
+
+2)Compare the total profit between these two territories in order for the territory manager, Mr. Stone make strategic decision that will aid profit maximization in 2020
+
+ANGLOPHONE COUNTRIES
+SELECT SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019' AND countries IN ('Nigeria','Ghana')
+
+FRANCOPHONE COUNTRIES
+SELECT SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019' AND countries IN ('Senegal','Benin','Togo')
+
+3)Country that generated the highest profit in 2019
+
+SELECT countries, SUM(profit) AS profit FROM internationalbreweries.pabod
+WHERE years='2019'
+GROUP BY countries
+ORDER BY profit desc
+
+4)Help him find the year with the highest profit
+
+SELECT years, SUM(profit) AS Totalprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019'
+GROUP BY years
+ORDER BY years
+
+
+5)Which month in the three years were the least profit generated
+
+SELECT month, SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019'
+Group BY month
+ORDER BY month desc
+
+
+6)What was the minimum profit in the month of December 2018?
+
+SELECT month, MIN(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years = '2018' AND month='December'
+GROUP BY month
+ORDER  BY min(profit) asc
+
+
+8) Which particular brand generated the highest profit in Senegal?
+
+SELECT brands,SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
+WHERE years BETWEEN '2018' and '2019' AND countries IN ('Senegal')
+GROUP BY rollup(brands)
+ORDER BY brands desc
+
+
+-------------------BRAND ANALYSIS-------------------------
+
+Within the last two years, the brand manager wants to know the top three brands consumed in the francophone countries
+
+SELECT brands ,SUM(quantity) AS qty from internationalbreweries.pabod
+WHERE years BETWEEN '2018' and '2019' AND countries IN ('senegal','benin','Togo')
+GROUP BY brands
+ORDER BY (brands)DESC
+
+
+2) Find out the top two choice of consumer brands in Ghana
+
+SELECT countries,brands ,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019' AND countries='Ghana'
+GROUP BY (brands,countries)
+ORDER BY (brands)DESC
+
+
+3) Find out the details of beers consumed in the past three years in the most oil reach country in West Africa.
+
+SELECT countries,brands ,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' AND '2019' AND countries='Nigeria'
+GROUP BY ROLLUP(brands,countries)
+ORDER BY (brands)DESC
+
+Favorites malt brand in Anglophone region between 2018 and 2019
+
+SELECT countries,brands ,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years BETWEEN '2018' and '2019' AND (brands = 'beta malt' or brands = 'grand malt') and countries in ('Nigeria','Ghana')
+GROUP BY(countries,brands)
+
+
+Which brands sold the highest in 2019 in Nigeria?
+
+SELECT countries,brands ,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years='2019' AND countries='Nigeria'
+GROUP BY (brands,countries)
+ORDER BY (brands)DESC
+
+
+6) Favorites brand in South_South region in Nigeria
+
+SELECT brands, region,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years='2019' AND countries='Nigeria'and region='southsouth'
+GROUP  BY (brands,region)
+ORDER BY (brands)DESC
+
+
+7) Bear consumption in Nigeria
+SELECT countries,brands,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE countries ='Nigeria' AND years BETWEEN '2017' and '2019'
+GROUP BY ROLLUP(countries,brands)
+
+8)Level of consumption of Budweiser in the regions in Nigeria
+
+SELECT region, brands,SUM(quantity) AS qty from internationalbreweries.pabod
+WHERE countries ='Nigeria' AND brands ='budweiser'AND years BETWEEN '2017' AND '2019'
+GROUP BY ROLLUP(region,brands)
+
+
+9) Level of consumption of Budweiser in the regions in Nigeria in 2019 (Decision on Promo
+
+SELECT region, brands,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE countries ='Nigeria' AND brands ='budweiser'AND years = '2019'
+GROUP BY ROLLUP(region,brands)
+
+
+10)Country with the highest consumption of beer.
+
+SELECT countries,brands,SUM(quantity) AS qty FROM internationalbreweries.pabod
+WHERE years BETWEEN '2017' and '2019'
+GROUP BY ROLLUP(countries,brands)
+ORDER BY brands
+
+2)Highest sales personnel of Budweiser in Senegal
+
+
+3) Country with the highest profit of the fourth quarter in 2019
+
+select countries,months, sum(profit) as Totaprofit from internationalbreweries.pabod
+where years=2019 and months in('october','November','december')
+group by (months,countries)
