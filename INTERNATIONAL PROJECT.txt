@@ -1,4 +1,7 @@
+-----Creating a Schema ---------
 CREATE SCHEMA internationalbreweries;
+
+---CREATE TABLE FOR INTERNATIONALBREWERIES-- 
 CREATE TABLE internationalbreweries.pabod(
 SALES_ID INT UNIQUE PRIMARY KEY,
 SALES_REP VARCHAR,
@@ -25,7 +28,7 @@ FROM internationalbreweries.pabod
 SELECT SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
 WHERE years BETWEEN '2017' and '2019'
 
-2)Compare the total profit between these two territories in order for the territory manager, Mr. Stone make strategic decision that will aid profit maximization in 2020
+---2)Compare the total profit between these two territories in order for the territory manager, Mr. Stone make strategic decision that will aid profit maximization in 2020---
 
 ANGLOPHONE COUNTRIES
 SELECT SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
@@ -58,7 +61,7 @@ Group BY month
 ORDER BY month desc
 
 
-6)What was the minimum profit in the month of December 2018?
+----6)What was the minimum profit in the month of December 2018?--------
 
 SELECT month, MIN(profit) AS Totaprofit FROM internationalbreweries.pabod
 WHERE years = '2018' AND month='December'
@@ -66,7 +69,7 @@ GROUP BY month
 ORDER  BY min(profit) asc
 
 
-8) Which particular brand generated the highest profit in Senegal?
+-------7) Which particular brand generated the highest profit in Senegal?--------
 
 SELECT brands,SUM(profit) AS Totaprofit FROM internationalbreweries.pabod
 WHERE years BETWEEN '2018' and '2019' AND countries IN ('Senegal')
